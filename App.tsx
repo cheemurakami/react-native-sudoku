@@ -16,10 +16,9 @@ import {
   View,
   Text,
   StatusBar,
-  Button,
   Alert,
 } from 'react-native';
-
+import {Button} from 'react-native-paper';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 declare const global: {HermesInternal: null | {}};
@@ -42,9 +41,13 @@ const App = () => {
               {nums.map((num) => {
                 return (
                   <Button
-                    title={num.toString()}
-                    onPress={() => Alert.alert('Hello')}
-                  />
+                    style={styles.numButton}
+                    key={num}
+                    mode="outlined"
+                    compact={true}
+                    onPress={() => Alert.alert('Hello')}>
+                    {num.toString()}
+                  </Button>
                 );
               })}
             </View>
@@ -72,15 +75,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
   },
-  sectionNumSelect: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
   numberSectionContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    
+    // justifyContent: 'space-around',
+    // backgroundColor: 'beige',
   },
+  numButton: {
+    flex: 1,
+  }
 });
 
 export default App;
