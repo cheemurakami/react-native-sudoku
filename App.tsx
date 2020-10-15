@@ -25,6 +25,17 @@ declare const global: {HermesInternal: null | {}};
 const App = () => {
   const nums: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+  const answers: number[][] = [
+    [9, 6, 4, 5, 8, 7, 3, 1, 2],
+    [1, 7, 2, 6, 3, 4, 8, 9, 5],
+    [3, 4, 5, 7, 9, 8, 1, 2, 6],
+    [6, 8, 9, 2, 1, 5, 4, 7, 3],
+    [7, 2, 1, 4, 6, 3, 9, 5, 8],
+    [8, 1, 3, 9, 5, 2, 6, 4, 7],
+    [2, 9, 7, 3, 4, 6, 5, 8, 1],
+    [4, 5, 6, 8, 7, 1, 2, 3, 9],
+  ];
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -39,12 +50,12 @@ const App = () => {
 
             <View style={styles.gridContainer}>
               <View>
-                {nums.map((row) => {
+                {answers.map((answerRows) => {
                   return (
-                    <View style={styles.row} key={row}>
-                      {nums.map((num) => {
+                    <View style={styles.row}>
+                      {answerRows.map((num) => {
                         return (
-                          <View style={styles.cell} key={num}>
+                          <View style={styles.cell}>
                             <Text style={styles.cellText}>{num}</Text>
                           </View>
                         );
@@ -61,7 +72,6 @@ const App = () => {
     </>
   );
 };
-
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
@@ -75,9 +85,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighter,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '600',
     color: Colors.black,
+    textAlign: 'center',
   },
   row: {
     flexDirection: 'row',
@@ -93,8 +104,9 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     flexDirection: 'row',
-    borderWidth: 1,
     justifyContent: 'center',
+    marginBottom: 20,
+    marginTop: 20,
   },
 });
 

@@ -28,6 +28,7 @@ const NumberSection = (props: Props) => {
 const styles = StyleSheet.create({
   numberSectionContainer: {
     flexDirection: 'row',
+    margin: 20,
   },
   numButton: {
     flex: 1,
