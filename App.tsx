@@ -16,10 +16,9 @@ import {
   View,
   Text,
   StatusBar,
-  Alert,
 } from 'react-native';
-import {Button} from 'react-native-paper';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import NumberSection from './components/NumberSection';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -55,21 +54,7 @@ const App = () => {
                 })}
               </View>
             </View>
-
-            <View style={styles.numberSectionContainer}>
-              {nums.map((num) => {
-                return (
-                  <Button
-                    style={styles.numButton}
-                    key={num}
-                    mode="outlined"
-                    compact={true}
-                    onPress={() => Alert.alert('Hello')}>
-                    {num.toString()}
-                  </Button>
-                );
-              })}
-            </View>
+            <NumberSection />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -93,12 +78,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
-  },
-  numberSectionContainer: {
-    flexDirection: 'row',
-  },
-  numButton: {
-    flex: 1,
   },
   row: {
     flexDirection: 'row',
