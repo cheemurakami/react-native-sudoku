@@ -37,6 +37,25 @@ const App = () => {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Sudoku</Text>
             </View>
+
+            <View style={styles.gridContainer}>
+              <View>
+                {nums.map((row) => {
+                  return (
+                    <View style={styles.row} key={row}>
+                      {nums.map((num) => {
+                        return (
+                          <View style={styles.cell} key={num}>
+                            <Text style={styles.cellText}>{num}</Text>
+                          </View>
+                        );
+                      })}
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+
             <View style={styles.numberSectionContainer}>
               {nums.map((num) => {
                 return (
@@ -77,13 +96,27 @@ const styles = StyleSheet.create({
   },
   numberSectionContainer: {
     flexDirection: 'row',
-    
-    // justifyContent: 'space-around',
-    // backgroundColor: 'beige',
   },
   numButton: {
     flex: 1,
-  }
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  cell: {
+    borderWidth: 1,
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+  },
+  cellText: {
+    textAlign: 'center',
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    justifyContent: 'center',
+  },
 });
 
 export default App;
