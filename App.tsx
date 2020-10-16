@@ -16,6 +16,8 @@ import {
   View,
   Text,
   StatusBar,
+  Alert,
+  TouchableHighlight,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NumberSection from './components/NumberSection';
@@ -25,6 +27,7 @@ declare const global: {HermesInternal: null | {}};
 
 const App = () => {
   const [randomIndexArr, setRandomIndexArr] = useState<Array<number>>([]);
+  const [selectedCell, setSelectedCell] = useState<Array<number>>([]);
 
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
@@ -48,6 +51,17 @@ const App = () => {
     setRandomIndexArr(arr);
   };
 
+  const cellStyle = (currentCellPosition: number[]) => {
+    if (
+      currentCellPosition[0] == selectedCell[0] &&
+      currentCellPosition[1] == selectedCell[1]
+    ) {
+      return {...styles.cell, backgroundColor: 'skyblue'};
+    } else {
+      return styles.cell;
+    }
+  };
+
   const gridDisplay = () => {
     if (randomIndexArr.length !== 0) {
       return (
@@ -60,9 +74,15 @@ const App = () => {
                     {answerRows.map((num, rowIndex) => {
                       if (rowIndex === randomIndexArr[index]) {
                         return (
-                          <View style={styles.cell} key={num}>
-                            <Text style={styles.cellText} />
-                          </View>
+                          <TouchableHighlight
+                            underlayColor="white"
+                            onPress={() => setSelectedCell([index, rowIndex])}>
+                            <View
+                              style={cellStyle([index, rowIndex])}
+                              key={num}>
+                              <Text style={styles.cellText} />
+                            </View>
+                          </TouchableHighlight>
                         );
                       } else {
                         return (
@@ -143,6 +163,9 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     justifyContent: 'center',
+  },
+  cellTextSelected: {
+    backgroundColor: 'skyblue',
   },
   cellText: {
     textAlign: 'center',
