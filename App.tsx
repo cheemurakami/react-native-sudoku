@@ -9,7 +9,6 @@
  */
 
 import React, {useState} from 'react';
-
 import {
   SafeAreaView,
   StyleSheet,
@@ -58,12 +57,20 @@ const App = () => {
               {answers.map((answerRows, index) => {
                 return (
                   <View style={styles.row} key={index}>
-                    {answerRows.map((num) => {
-                      return (
-                        <View style={styles.cell} key={num}>
-                          <Text style={styles.cellText}>{num}</Text>
-                        </View>
-                      );
+                    {answerRows.map((num, rowIndex) => {
+                      if (rowIndex === randomIndexArr[index]) {
+                        return (
+                          <View style={styles.cell} key={num}>
+                            <Text style={styles.cellText} />
+                          </View>
+                        );
+                      } else {
+                        return (
+                          <View style={styles.cell} key={num}>
+                            <Text style={styles.cellText}>{num}</Text>
+                          </View>
+                        );
+                      }
                     })}
                   </View>
                 );
