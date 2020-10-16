@@ -19,13 +19,12 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NumberSection from './components/NumberSection';
+import {Button} from 'react-native-paper';
 
 declare const global: {HermesInternal: null | {}};
 
 const App = () => {
-  const nums: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  const answers: number[][] = [
+  const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
     [1, 7, 2, 6, 3, 4, 8, 9, 5],
     [3, 4, 5, 7, 9, 8, 1, 2, 6],
@@ -35,6 +34,17 @@ const App = () => {
     [2, 9, 7, 3, 4, 6, 5, 8, 1],
     [4, 5, 6, 8, 7, 1, 2, 3, 9],
   ];
+
+  const randomIndexNums = () => {
+    const randomNum = () => {
+      return Math.floor(Math.random() * Math.floor(9));
+    };
+    let randomIndexArr = [];
+    for (let i = 0; i < 9; i++) {
+      randomIndexArr.push(randomNum());
+    }
+    return randomIndexArr;
+  };
 
   return (
     <>
@@ -47,7 +57,14 @@ const App = () => {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Sudoku</Text>
             </View>
-
+            <View style={styles.buttonView}>
+              <Button
+                style={styles.startButton}
+                mode="outlined"
+                onPress={() => console.log('Hello')}>
+                Start
+              </Button>
+            </View>
             <View style={styles.gridContainer}>
               <View>
                 {answers.map((answerRows) => {
@@ -89,6 +106,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
     textAlign: 'center',
+  },
+  buttonView: {
+    alignItems: 'center',
+  },
+  startButton: {
+    marginTop: 20,
+    backgroundColor: 'pink',
+    width: 100,
   },
   row: {
     flexDirection: 'row',
