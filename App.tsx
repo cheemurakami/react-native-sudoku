@@ -8,7 +8,8 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
+
 import {
   SafeAreaView,
   StyleSheet,
@@ -24,6 +25,8 @@ import {Button} from 'react-native-paper';
 declare const global: {HermesInternal: null | {}};
 
 const App = () => {
+  const [randomIndexArr, setRandomIndexArr] = useState<Array<number>>([]);
+
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
     [1, 7, 2, 6, 3, 4, 8, 9, 5],
@@ -36,14 +39,41 @@ const App = () => {
   ];
 
   const randomIndexNums = () => {
+    let arr: number[] = [];
     const randomNum = () => {
       return Math.floor(Math.random() * Math.floor(9));
     };
-    let randomIndexArr = [];
     for (let i = 0; i < 9; i++) {
-      randomIndexArr.push(randomNum());
+      arr.push(randomNum());
     }
-    return randomIndexArr;
+    setRandomIndexArr(arr);
+  };
+
+  const gridDisplay = () => {
+    if (randomIndexArr.length !== 0) {
+      return (
+        <>
+          <View style={styles.gridContainer}>
+            <View>
+              {answers.map((answerRows, index) => {
+                return (
+                  <View style={styles.row} key={index}>
+                    {answerRows.map((num) => {
+                      return (
+                        <View style={styles.cell} key={num}>
+                          <Text style={styles.cellText}>{num}</Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+          <NumberSection />
+        </>
+      );
+    }
   };
 
   return (
@@ -61,28 +91,11 @@ const App = () => {
               <Button
                 style={styles.startButton}
                 mode="outlined"
-                onPress={() => console.log('Hello')}>
+                onPress={() => randomIndexNums()}>
                 Start
               </Button>
             </View>
-            <View style={styles.gridContainer}>
-              <View>
-                {answers.map((answerRows) => {
-                  return (
-                    <View style={styles.row}>
-                      {answerRows.map((num) => {
-                        return (
-                          <View style={styles.cell}>
-                            <Text style={styles.cellText}>{num}</Text>
-                          </View>
-                        );
-                      })}
-                    </View>
-                  );
-                })}
-              </View>
-            </View>
-            <NumberSection />
+            {gridDisplay()}
           </View>
         </ScrollView>
       </SafeAreaView>
