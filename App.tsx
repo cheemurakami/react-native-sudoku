@@ -27,7 +27,7 @@ declare const global: {HermesInternal: null | {}};
 
 const App = () => {
   const [randomIndexArr, setRandomIndexArr] = useState<Array<number>>([]);
-  const [selectedCell, setSelectedCell] = useState<Array<number>>([]);
+  const [selectedCell, setSelectedCell] = useState<Array<number>>([]); //position
 
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
@@ -59,6 +59,19 @@ const App = () => {
       return {...styles.cell, backgroundColor: 'skyblue'};
     } else {
       return styles.cell;
+    }
+  };
+
+  const pressHandler = (pressedNum: number) => {
+    if (selectedCell.length > 0) {
+      const positionRow = selectedCell[0];
+      const positionCol = selectedCell[1];
+      const answerNum = answers[positionRow][positionCol];
+      if (answerNum === pressedNum) {
+        Alert.alert('Correct!');
+      } else {
+        Alert.alert('Wrong!');
+      }
     }
   };
 
@@ -97,7 +110,7 @@ const App = () => {
               })}
             </View>
           </View>
-          <NumberSection />
+          <NumberSection pressHandler={pressHandler}/>
         </>
       );
     }

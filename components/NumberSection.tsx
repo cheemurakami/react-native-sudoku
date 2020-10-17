@@ -2,7 +2,9 @@ import React from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 
-interface Props {}
+interface Props {
+  pressHandler: (pressedNum: number) => void;
+}
 
 const NumberSection = (props: Props) => {
   const nums: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -16,7 +18,7 @@ const NumberSection = (props: Props) => {
             key={num}
             mode="outlined"
             compact={true}
-            onPress={() => Alert.alert('Hello')}>
+            onPress={() => props.pressHandler(num)}>
             {num.toString()}
           </Button>
         );
