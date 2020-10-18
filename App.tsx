@@ -27,7 +27,8 @@ declare const global: {HermesInternal: null | {}};
 
 const App = () => {
   const [randomIndexArr, setRandomIndexArr] = useState<Array<number>>([]);
-  const [selectedCell, setSelectedCell] = useState<Array<number>>([]); //position
+  const [selectedCell, setSelectedCell] = useState<Array<number>>([]);
+  const [guessedPositions, setGuessedPositions] = useState<any[][] | any[]>([]);
 
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
@@ -68,10 +69,12 @@ const App = () => {
       const positionCol = selectedCell[1];
       const answerNum = answers[positionRow][positionCol];
       if (answerNum === pressedNum) {
-        Alert.alert('Correct!');
+        setGuessedPositions([...guessedPositions, selectedCell]);
       } else {
         Alert.alert('Wrong!');
       }
+    } else {
+      Alert.alert('Please select an empty box');
     }
   };
 
@@ -85,7 +88,11 @@ const App = () => {
                 return (
                   <View style={styles.row} key={index}>
                     {answerRows.map((num, rowIndex) => {
-                      if (rowIndex === randomIndexArr[index]) {
+                      // should check gueseedPositions have the same position thats mapping
+                      if (
+                        rowIndex === randomIndexArr[index] &&
+                        guessedPositions.includes([index, rowIndex])
+                      ) {
                         return (
                           <TouchableHighlight
                             underlayColor="white"
@@ -110,7 +117,7 @@ const App = () => {
               })}
             </View>
           </View>
-          <NumberSection pressHandler={pressHandler}/>
+          <NumberSection pressHandler={pressHandler} />
         </>
       );
     }
