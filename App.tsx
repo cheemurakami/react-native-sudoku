@@ -28,7 +28,7 @@ declare const global: {HermesInternal: null | {}};
 const App = () => {
   const [randomIndexArr, setRandomIndexArr] = useState<Array<number>>([]);
   const [selectedCell, setSelectedCell] = useState<Array<number>>([]);
-  const [guessedPositions, setGuessedPositions] = useState<any[][] | any[]>([]);
+  const [guessedPositions, setGuessedPositions] = useState<any[]>([[]]);
 
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
@@ -78,6 +78,16 @@ const App = () => {
     }
   };
 
+  const guessedPositionsToCompare: any[] = guessedPositions.map(
+    (position: any[]) => {
+      return position.toString();
+    },
+  );
+
+  const checkMatch = (index: number, rowIndex: number) => {
+    return guessedPositionsToCompare.includes([index, rowIndex].toString());
+  };
+
   const gridDisplay = () => {
     if (randomIndexArr.length !== 0) {
       return (
@@ -88,13 +98,13 @@ const App = () => {
                 return (
                   <View style={styles.row} key={index}>
                     {answerRows.map((num, rowIndex) => {
-                      // should check gueseedPositions have the same position thats mapping
                       if (
-                        rowIndex === randomIndexArr[index] &&
-                        guessedPositions.includes([index, rowIndex])
+                        !checkMatch(index, rowIndex) &&
+                        rowIndex === randomIndexArr[index]
                       ) {
                         return (
                           <TouchableHighlight
+                            key={num}
                             underlayColor="white"
                             onPress={() => setSelectedCell([index, rowIndex])}>
                             <View
