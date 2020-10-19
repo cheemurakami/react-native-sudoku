@@ -18,6 +18,8 @@ import {
   StatusBar,
   Alert,
   TouchableHighlight,
+  Animated,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NumberSection from './components/NumberSection';
@@ -29,6 +31,7 @@ const App = () => {
   const [randomIndexArr, setRandomIndexArr] = useState<Array<number>>([]);
   const [selectedCell, setSelectedCell] = useState<Array<number>>([]);
   const [guessedPositions, setGuessedPositions] = useState<any[]>([[]]);
+  const [animation] = useState(new Animated.Value(0));
 
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
@@ -44,12 +47,26 @@ const App = () => {
   const randomIndexNums = () => {
     let arr: number[] = [];
     const randomNum = () => {
-      return Math.floor(Math.random() * Math.floor(9));
+      return Math.floor(Math.random() * Math.floor(8));
     };
     for (let i = 0; i < 9; i++) {
       arr.push(randomNum());
     }
     setRandomIndexArr(arr);
+  };
+
+  const guessedPositionsToCompare: any[] = guessedPositions.map(
+    (position: any[]) => {
+      return position.toString();
+    },
+  );
+
+  const hasBeenAnswered = (index: number, rowIndex: number) => {
+    if (guessedPositionsToCompare.length > 0) {
+      return guessedPositionsToCompare.includes([index, rowIndex].toString());
+    } else {
+      return false;
+    }
   };
 
   const cellStyle = (currentCellPosition: number[]) => {
@@ -69,6 +86,7 @@ const App = () => {
       const positionCol = selectedCell[1];
       const answerNum = answers[positionRow][positionCol];
       if (answerNum === pressedNum) {
+        handleAnimation();
         setGuessedPositions([...guessedPositions, selectedCell]);
       } else {
         Alert.alert('Wrong!');
@@ -78,60 +96,38 @@ const App = () => {
     }
   };
 
-  const guessedPositionsToCompare: any[] = guessedPositions.map(
-    (position: any[]) => {
-      return position.toString();
-    },
-  );
-
-  const checkMatch = (index: number, rowIndex: number) => {
-    return guessedPositionsToCompare.includes([index, rowIndex].toString());
+  const handleAnimation = () => {
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 1000,
+    }).start(() => {
+      Animated.timing(animation, {
+        toValue: 0,
+        duration: 1000,
+      }).start();
+    });
   };
+  const boxInterpolation = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgb(255, 255, 255)', 'rgb(255, 255, 153)'],
+  });
 
-  const gridDisplay = () => {
-    if (randomIndexArr.length !== 0) {
-      return (
-        <>
-          <View style={styles.gridContainer}>
-            <View>
-              {answers.map((answerRows, index) => {
-                return (
-                  <View style={styles.row} key={index}>
-                    {answerRows.map((num, rowIndex) => {
-                      if (
-                        !checkMatch(index, rowIndex) &&
-                        rowIndex === randomIndexArr[index]
-                      ) {
-                        return (
-                          <TouchableHighlight
-                            key={num}
-                            underlayColor="white"
-                            onPress={() => setSelectedCell([index, rowIndex])}>
-                            <View
-                              style={cellStyle([index, rowIndex])}
-                              key={num}>
-                              <Text style={styles.cellText} />
-                            </View>
-                          </TouchableHighlight>
-                        );
-                      } else {
-                        return (
-                          <View style={styles.cell} key={num}>
-                            <Text style={styles.cellText}>{num}</Text>
-                          </View>
-                        );
-                      }
-                    })}
-                  </View>
-                );
-              })}
-            </View>
-          </View>
-          <NumberSection pressHandler={pressHandler} />
-        </>
-      );
+  const animatedStyle = (index: number, rowIndex: number) => {
+    let lastIndex = guessedPositions.length - 1;
+    if (
+      guessedPositions[lastIndex].toString() === [index, rowIndex].toString()
+    ) {
+      return {backgroundColor: boxInterpolation};
+    } else {
+      return {};
     }
   };
+
+  const showBlankCell = (index: number, rowIndex: number) => {
+    return (
+      !hasBeenAnswered(index, rowIndex) && rowIndex === randomIndexArr[index]
+    );
+  }
 
   return (
     <>
@@ -152,7 +148,53 @@ const App = () => {
                 Start
               </Button>
             </View>
-            {gridDisplay()}
+            {randomIndexArr.length > 0 && (
+              <>
+                <View style={styles.gridContainer}>
+                  <View>
+                    {answers.map((answerRows, index) => {
+                      return (
+                        <View style={styles.row} key={index}>
+                          {answerRows.map((num, rowIndex) => {
+                            if (showBlankCell(index, rowIndex)) {
+                              return (
+                                <TouchableHighlight
+                                  key={num}
+                                  underlayColor="white"
+                                  onPress={() =>
+                                    setSelectedCell([index, rowIndex])
+                                  }>
+                                  <View
+                                    style={cellStyle([index, rowIndex])}
+                                    key={num}>
+                                    <Text style={styles.cellText} />
+                                  </View>
+                                </TouchableHighlight>
+                              );
+                            } else {
+                              return (
+                                <View style={styles.cell} key={num}>
+                                  <TouchableWithoutFeedback>
+                                    <Animated.View
+                                      style={{
+                                        ...styles.selectedCell,
+                                        ...animatedStyle(index, rowIndex),
+                                      }}>
+                                      <Text style={styles.cellText}>{num}</Text>
+                                    </Animated.View>
+                                  </TouchableWithoutFeedback>
+                                </View>
+                              );
+                            }
+                          })}
+                        </View>
+                      );
+                    })}
+                  </View>
+                </View>
+                <NumberSection pressHandler={pressHandler} />
+              </>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -194,8 +236,10 @@ const styles = StyleSheet.create({
     width: 40,
     justifyContent: 'center',
   },
-  cellTextSelected: {
-    backgroundColor: 'skyblue',
+  selectedCell: {
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
   },
   cellText: {
     textAlign: 'center',
