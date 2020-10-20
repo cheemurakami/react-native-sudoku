@@ -30,8 +30,9 @@ declare const global: {HermesInternal: null | {}};
 const App = () => {
   const [randomIndexArr, setRandomIndexArr] = useState<Array<number>>([]);
   const [selectedCell, setSelectedCell] = useState<Array<number>>([]);
-  const [guessedPositions, setGuessedPositions] = useState<any[]>([[]]);
+  const [guessedPositions, setGuessedPositions] = useState<any[]>([]);
   const [animation] = useState(new Animated.Value(0));
+  const [playBtnText, setPlayBtnText] = useState<String>('Start');
 
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
@@ -49,10 +50,11 @@ const App = () => {
     const randomNum = () => {
       return Math.floor(Math.random() * Math.floor(8));
     };
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 2; i++) {
       arr.push(randomNum());
     }
     setRandomIndexArr(arr);
+    setPlayBtnText('Reset');
   };
 
   const guessedPositionsToCompare: any[] = guessedPositions.map(
@@ -87,7 +89,9 @@ const App = () => {
       const answerNum = answers[positionRow][positionCol];
       if (answerNum === pressedNum) {
         handleAnimation();
-        setGuessedPositions([...guessedPositions, selectedCell]);
+        const newGuessedPositions = [...guessedPositions, selectedCell]; //state hasn't been changed yet so store it to variable
+        setGuessedPositions(newGuessedPositions);
+        isCompleted(newGuessedPositions); //then pass that variable here
       } else {
         Alert.alert('Wrong!');
       }
@@ -96,19 +100,26 @@ const App = () => {
     }
   };
 
+  const isCompleted = (newGuessedPositions: string | number[]) => {
+    console.log(guessedPositions);
+    if (newGuessedPositions.length === randomIndexArr.length) {
+      setPlayBtnText('Replay');
+    }
+  };
+
   const handleAnimation = () => {
     Animated.timing(animation, {
-      toValue: 1,
+      toValue: 0,
       duration: 1000,
       useNativeDriver: false,
     }).start(() => {
       Animated.timing(animation, {
-        toValue: 0,
+        toValue: 1,
         duration: 1000,
         useNativeDriver: false,
       }).start(() => {
         Animated.timing(animation, {
-          toValue: 1,
+          toValue: 0,
           duration: 1000,
           useNativeDriver: false,
         }).start();
@@ -124,6 +135,7 @@ const App = () => {
   const animatedStyle = (index: number, rowIndex: number) => {
     let lastIndex = guessedPositions.length - 1;
     if (
+      guessedPositions[lastIndex] &&
       guessedPositions[lastIndex].toString() === [index, rowIndex].toString()
     ) {
       return {backgroundColor: boxInterpolation, borderWidth: 1};
@@ -154,7 +166,7 @@ const App = () => {
                 style={styles.startButton}
                 mode="outlined"
                 onPress={() => randomIndexNums()}>
-                Start
+                {playBtnText}
               </Button>
             </View>
             {randomIndexArr.length > 0 && (
