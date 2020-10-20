@@ -86,6 +86,7 @@ const App = () => {
       const positionCol = selectedCell[1];
       const answerNum = answers[positionRow][positionCol];
       if (answerNum === pressedNum) {
+        console.log(answerNum, pressedNum);
         handleAnimation();
         setGuessedPositions([...guessedPositions, selectedCell]);
       } else {
@@ -104,9 +105,15 @@ const App = () => {
       Animated.timing(animation, {
         toValue: 0,
         duration: 1000,
-      }).start();
+      }).start(() => {
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 1000,
+        }).start();
+      });
     });
   };
+  
   const boxInterpolation = animation.interpolate({
     inputRange: [0, 1],
     outputRange: ['rgb(255, 255, 255)', 'rgb(255, 255, 153)'],
@@ -117,7 +124,7 @@ const App = () => {
     if (
       guessedPositions[lastIndex].toString() === [index, rowIndex].toString()
     ) {
-      return {backgroundColor: boxInterpolation};
+      return {backgroundColor: boxInterpolation, borderWidth: 1};
     } else {
       return {};
     }
@@ -127,7 +134,7 @@ const App = () => {
     return (
       !hasBeenAnswered(index, rowIndex) && rowIndex === randomIndexArr[index]
     );
-  }
+  };
 
   return (
     <>
