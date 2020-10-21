@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
 
 interface Props {
@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
   },
   numButton: {
     flex: 1,
+    opacity: 0.75,
+    backgroundColor: 'white',
   },
 });
 

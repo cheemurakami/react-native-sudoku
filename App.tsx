@@ -20,6 +20,7 @@ import {
   TouchableHighlight,
   Animated,
   TouchableWithoutFeedback,
+  ImageBackground,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NumberSection from './components/NumberSection';
@@ -44,6 +45,11 @@ const App = () => {
     [2, 9, 7, 3, 4, 6, 5, 8, 1],
     [4, 5, 6, 8, 7, 1, 2, 3, 9],
   ];
+
+  const image = {
+    uri:
+      'https://www.san-x.co.jp/charapri/images/kabe/rirakkuma/125_1920_1080.png',
+  };
 
   const randomIndexNums = () => {
     let arr: number[] = [];
@@ -101,7 +107,6 @@ const App = () => {
   };
 
   const isCompleted = (newGuessedPositions: string | number[]) => {
-    console.log(guessedPositions);
     if (newGuessedPositions.length === randomIndexArr.length) {
       setPlayBtnText('Replay');
     }
@@ -169,59 +174,64 @@ const App = () => {
                 {playBtnText}
               </Button>
             </View>
-            {randomIndexArr.length > 0 && (
-              <>
-                <View style={styles.gridContainer}>
-                  <View>
-                    {answers.map((answerRows, index) => {
-                      return (
-                        <View style={styles.row} key={index}>
-                          {answerRows.map((num, rowIndex) => {
-                            if (showBlankCell(index, rowIndex)) {
-                              return (
-                                <TouchableHighlight
-                                  key={num}
-                                  underlayColor="white"
-                                  onPress={() =>
-                                    setSelectedCell([index, rowIndex])
-                                  }>
-                                  <View
-                                    style={cellStyle([index, rowIndex])}
-                                    key={num}>
-                                    <Text style={styles.cellText} />
+            <ImageBackground source={image} style={styles.image}>
+              {randomIndexArr.length > 0 && (
+                <>
+                  <View style={styles.gridContainer}>
+                    <View>
+                      {answers.map((answerRows, index) => {
+                        return (
+                          <View style={styles.row} key={index}>
+                            {answerRows.map((num, rowIndex) => {
+                              if (showBlankCell(index, rowIndex)) {
+                                return (
+                                  <TouchableHighlight
+                                    key={num}
+                                    underlayColor="white"
+                                    onPress={() =>
+                                      setSelectedCell([index, rowIndex])
+                                    }>
+                                    <View
+                                      style={cellStyle([index, rowIndex])}
+                                      key={num}>
+                                      <Text style={styles.cellText} />
+                                    </View>
+                                  </TouchableHighlight>
+                                );
+                              } else {
+                                return (
+                                  <View style={styles.cell} key={num}>
+                                    <TouchableWithoutFeedback>
+                                      <Animated.View
+                                        style={{
+                                          ...styles.selectedCell,
+                                          ...animatedStyle(index, rowIndex),
+                                        }}>
+                                        <Text style={styles.cellText}>
+                                          {num}
+                                        </Text>
+                                      </Animated.View>
+                                    </TouchableWithoutFeedback>
                                   </View>
-                                </TouchableHighlight>
-                              );
-                            } else {
-                              return (
-                                <View style={styles.cell} key={num}>
-                                  <TouchableWithoutFeedback>
-                                    <Animated.View
-                                      style={{
-                                        ...styles.selectedCell,
-                                        ...animatedStyle(index, rowIndex),
-                                      }}>
-                                      <Text style={styles.cellText}>{num}</Text>
-                                    </Animated.View>
-                                  </TouchableWithoutFeedback>
-                                </View>
-                              );
-                            }
-                          })}
-                        </View>
-                      );
-                    })}
+                                );
+                              }
+                            })}
+                          </View>
+                        );
+                      })}
+                    </View>
                   </View>
-                </View>
-                <NumberSection pressHandler={pressHandler} />
-              </>
-            )}
+                  <NumberSection pressHandler={pressHandler} />
+                </>
+              )}
+            </ImageBackground>
           </View>
         </ScrollView>
       </SafeAreaView>
     </>
   );
 };
+
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
@@ -235,8 +245,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighter,
   },
   sectionTitle: {
-    fontSize: 28,
-    fontWeight: '600',
+    fontSize: 30,
+    fontWeight: '400',
     color: Colors.black,
     textAlign: 'center',
   },
@@ -245,8 +255,11 @@ const styles = StyleSheet.create({
   },
   startButton: {
     marginTop: 20,
+    marginBottom: 20,
     backgroundColor: 'pink',
     width: 100,
+    fontSize: 80,
+    fontWeight: 'bold',
   },
   row: {
     flexDirection: 'row',
@@ -256,6 +269,8 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     justifyContent: 'center',
+    backgroundColor: 'white',
+    opacity: 0.75,
   },
   selectedCell: {
     height: 40,
@@ -270,6 +285,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 20,
     marginTop: 20,
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
   },
 });
 
