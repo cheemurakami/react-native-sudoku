@@ -161,20 +161,21 @@ const App = () => {
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={{flexGrow: 1}}
           style={styles.scrollView}>
           <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Sudoku</Text>
-            </View>
-            <View style={styles.buttonView}>
-              <Button
-                style={styles.startButton}
-                mode="outlined"
-                onPress={() => randomIndexNums()}>
-                {playBtnText}
-              </Button>
-            </View>
             <ImageBackground source={image} style={styles.image}>
+              <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Sudoku</Text>
+              </View>
+              <View style={styles.buttonView}>
+                <Button
+                  style={styles.startButton}
+                  mode="outlined"
+                  onPress={() => randomIndexNums()}>
+                  {playBtnText}
+                </Button>
+              </View>
               {randomIndexArr.length > 0 && (
                 <>
                   <View style={styles.gridContainer}>
@@ -235,9 +236,12 @@ const App = () => {
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
+    height: '100%',
   },
   body: {
     backgroundColor: Colors.white,
+    height: '100%',
+    borderWidth: 5,
   },
   sectionContainer: {
     marginTop: 32,
@@ -290,6 +294,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
+    height: '100%',
   },
 });
 
