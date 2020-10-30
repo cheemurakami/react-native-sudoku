@@ -14,6 +14,9 @@ _This is a simple sudoku game that I created using React Native and TypeScript._
 * Run `npx react-native start`
 * Run `npx react-native run-ios`
 
+
+![tree](./sudoku2.png)
+
 ## 🐛 Known Bugs 🐛
 
 _No known bugs at this time_
