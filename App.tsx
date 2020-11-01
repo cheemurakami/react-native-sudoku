@@ -34,6 +34,7 @@ const App = () => {
   const [guessedPositions, setGuessedPositions] = useState<any[]>([]);
   const [animation] = useState(new Animated.Value(0));
   const [playBtnText, setPlayBtnText] = useState<String>('Start');
+  const [playing, setPlaying] = useState<boolean>(false);
 
   const answers: any[][] = [
     [9, 6, 4, 5, 8, 7, 3, 1, 2],
@@ -51,6 +52,12 @@ const App = () => {
       'https://www.san-x.co.jp/charapri/images/kabe/rirakkuma/125_1920_1080.png',
   };
 
+  const playGame = () => {
+    randomIndexNums();
+    setPlayBtnText('Reset');
+    setPlaying(true);
+  };
+
   const randomIndexNums = () => {
     let arr: number[] = [];
     const randomNum = () => {
@@ -60,7 +67,6 @@ const App = () => {
       arr.push(randomNum());
     }
     setRandomIndexArr(arr);
-    setPlayBtnText('Reset');
   };
 
   const guessedPositionsToCompare: any[] = guessedPositions.map(
@@ -164,16 +170,22 @@ const App = () => {
           style={styles.scrollView}>
           <View style={styles.body}>
             <ImageBackground source={image} style={styles.image} />
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Sudoku</Text>
-            </View>
-            <View style={styles.buttonView}>
-              <Button
-                style={styles.startButton}
-                mode="outlined"
-                onPress={() => randomIndexNums()}>
-                {playBtnText}
-              </Button>
+            <View
+              style={{
+                flexGrow: playing ? 0 : 1,
+                justifyContent: 'center',
+              }}>
+              <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Sudoku</Text>
+              </View>
+              <View style={styles.buttonView}>
+                <Button
+                  style={styles.startButton}
+                  mode="outlined"
+                  onPress={() => playGame()}>
+                  {playBtnText}
+                </Button>
+              </View>
             </View>
             {randomIndexArr.length > 0 && (
               <>
@@ -207,9 +219,7 @@ const App = () => {
                                         ...styles.selectedCell,
                                         ...animatedStyle(index, rowIndex),
                                       }}>
-                                      <Text style={styles.cellText}>
-                                        {num}
-                                      </Text>
+                                      <Text style={styles.cellText}>{num}</Text>
                                     </Animated.View>
                                   </TouchableWithoutFeedback>
                                 </View>

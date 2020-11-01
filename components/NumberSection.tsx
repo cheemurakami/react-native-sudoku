@@ -30,11 +30,14 @@ const NumberSection = (props: Props) => {
 const styles = StyleSheet.create({
   numberSectionContainer: {
     flexDirection: 'row',
-    margin: 20,
+    margin: 40,
+    padding: 10,
+    opacity: 0.85,
+    backgroundColor: 'white',
+    borderRadius: 10,
   },
   numButton: {
     flex: 1,
-    opacity: 0.75,
     backgroundColor: 'white',
   },
 });
