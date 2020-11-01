@@ -56,7 +56,7 @@ const App = () => {
     const randomNum = () => {
       return Math.floor(Math.random() * Math.floor(8));
     };
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 9; i++) {
       arr.push(randomNum());
     }
     setRandomIndexArr(arr);
@@ -160,72 +160,70 @@ const App = () => {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
           contentContainerStyle={{flexGrow: 1}}
           style={styles.scrollView}>
           <View style={styles.body}>
-            <ImageBackground source={image} style={styles.image}>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Sudoku</Text>
-              </View>
-              <View style={styles.buttonView}>
-                <Button
-                  style={styles.startButton}
-                  mode="outlined"
-                  onPress={() => randomIndexNums()}>
-                  {playBtnText}
-                </Button>
-              </View>
-              {randomIndexArr.length > 0 && (
-                <>
-                  <View style={styles.gridContainer}>
-                    <View>
-                      {answers.map((answerRows, index) => {
-                        return (
-                          <View style={styles.row} key={index}>
-                            {answerRows.map((num, rowIndex) => {
-                              if (showBlankCell(index, rowIndex)) {
-                                return (
-                                  <TouchableHighlight
-                                    key={num}
-                                    underlayColor="white"
-                                    onPress={() =>
-                                      setSelectedCell([index, rowIndex])
-                                    }>
-                                    <View
-                                      style={cellStyle([index, rowIndex])}
-                                      key={num}>
-                                      <Text style={styles.cellText} />
-                                    </View>
-                                  </TouchableHighlight>
-                                );
-                              } else {
-                                return (
-                                  <View style={styles.cell} key={num}>
-                                    <TouchableWithoutFeedback>
-                                      <Animated.View
-                                        style={{
-                                          ...styles.selectedCell,
-                                          ...animatedStyle(index, rowIndex),
-                                        }}>
-                                        <Text style={styles.cellText}>
-                                          {num}
-                                        </Text>
-                                      </Animated.View>
-                                    </TouchableWithoutFeedback>
+            <ImageBackground source={image} style={styles.image} />
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Sudoku</Text>
+            </View>
+            <View style={styles.buttonView}>
+              <Button
+                style={styles.startButton}
+                mode="outlined"
+                onPress={() => randomIndexNums()}>
+                {playBtnText}
+              </Button>
+            </View>
+            {randomIndexArr.length > 0 && (
+              <>
+                <View style={styles.gridContainer}>
+                  <View>
+                    {answers.map((answerRows, index) => {
+                      return (
+                        <View style={styles.row} key={index}>
+                          {answerRows.map((num, rowIndex) => {
+                            if (showBlankCell(index, rowIndex)) {
+                              return (
+                                <TouchableHighlight
+                                  key={num}
+                                  underlayColor="white"
+                                  onPress={() =>
+                                    setSelectedCell([index, rowIndex])
+                                  }>
+                                  <View
+                                    style={cellStyle([index, rowIndex])}
+                                    key={num}>
+                                    <Text style={styles.cellText} />
                                   </View>
-                                );
-                              }
-                            })}
-                          </View>
-                        );
-                      })}
-                    </View>
+                                </TouchableHighlight>
+                              );
+                            } else {
+                              return (
+                                <View style={styles.cell} key={num}>
+                                  <TouchableWithoutFeedback>
+                                    <Animated.View
+                                      style={{
+                                        ...styles.selectedCell,
+                                        ...animatedStyle(index, rowIndex),
+                                      }}>
+                                      <Text style={styles.cellText}>
+                                        {num}
+                                      </Text>
+                                    </Animated.View>
+                                  </TouchableWithoutFeedback>
+                                </View>
+                              );
+                            }
+                          })}
+                        </View>
+                      );
+                    })}
                   </View>
-                  <NumberSection pressHandler={pressHandler} />
-                </>
-              )}
-            </ImageBackground>
+                </View>
+                <NumberSection pressHandler={pressHandler} />
+              </>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -237,16 +235,15 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
     height: '100%',
+    flexDirection: 'column',
   },
   body: {
     backgroundColor: Colors.white,
-    height: '100%',
-    borderWidth: 5,
+    flexGrow: 1,
   },
   sectionContainer: {
-    marginTop: 32,
     paddingHorizontal: 24,
-    backgroundColor: Colors.lighter,
+    backgroundColor: Colors.inherit,
   },
   sectionTitle: {
     fontSize: 30,
@@ -291,10 +288,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   image: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
 
