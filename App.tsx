@@ -24,6 +24,7 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NumberSection from './components/NumberSection';
+import Completed from './components/Completed';
 import {Button} from 'react-native-paper';
 
 declare const global: {HermesInternal: null | {}};
@@ -35,16 +36,18 @@ const App = () => {
   const [animation] = useState(new Animated.Value(0));
   const [playBtnText, setPlayBtnText] = useState<String>('Start');
   const [playing, setPlaying] = useState<boolean>(false);
+  const [completed, setCompleted] = useState<boolean>(false);
 
   const answers: any[][] = [
-    [9, 6, 4, 5, 8, 7, 3, 1, 2],
-    [1, 7, 2, 6, 3, 4, 8, 9, 5],
-    [3, 4, 5, 7, 9, 8, 1, 2, 6],
-    [6, 8, 9, 2, 1, 5, 4, 7, 3],
-    [7, 2, 1, 4, 6, 3, 9, 5, 8],
-    [8, 1, 3, 9, 5, 2, 6, 4, 7],
-    [2, 9, 7, 3, 4, 6, 5, 8, 1],
-    [4, 5, 6, 8, 7, 1, 2, 3, 9],
+    [5, 4, 7, 1, 2, 3, 9, 6, 8],
+    [2, 1, 9, 6, 8, 4, 3, 5, 7],
+    [8, 3, 6, 9, 5, 7, 4, 2, 1],
+    [3, 6, 2, 8, 9, 1, 5, 7, 4],
+    [1, 9, 4, 2, 7, 5, 6, 8, 3],
+    [7, 5, 8, 3, 4, 6, 1, 9, 2],
+    [9, 7, 1, 5, 3, 8, 2, 4, 6],
+    [4, 2, 3, 7, 6, 9, 8, 1, 5],
+    [6, 8, 5, 4, 1, 2, 7, 3, 9],
   ];
 
   const image = {
@@ -54,14 +57,15 @@ const App = () => {
 
   const playGame = () => {
     randomIndexNums();
-    setPlayBtnText('Reset');
     setPlaying(true);
+    setPlayBtnText('Reset');
+    setCompleted(false);
   };
 
   const randomIndexNums = () => {
     let arr: number[] = [];
     const randomNum = () => {
-      return Math.floor(Math.random() * Math.floor(8));
+      return Math.floor(Math.random() * Math.floor(9));
     };
     for (let i = 0; i < 9; i++) {
       arr.push(randomNum());
@@ -115,6 +119,7 @@ const App = () => {
   const isCompleted = (newGuessedPositions: string | number[]) => {
     if (newGuessedPositions.length === randomIndexArr.length) {
       setPlayBtnText('Replay');
+      setCompleted(true);
     }
   };
 
@@ -161,6 +166,12 @@ const App = () => {
     );
   };
 
+  const completedDisp = () => {
+    if (completed) {
+      return <Completed />;
+    }
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -178,6 +189,7 @@ const App = () => {
               <View style={styles.sectionContainer}>
                 <Text style={styles.sectionTitle}>Sudoku</Text>
               </View>
+              {completedDisp()}
               <View style={styles.buttonView}>
                 <Button
                   style={styles.startButton}
