@@ -1,22 +1,27 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Card} from 'react-native-paper';
+import {StyleSheet, View, Image} from 'react-native';
 
 export const Completed = () => {
   return (
     <>
       <View>
-        <Card>
-          <Card.Cover
-            source={{
-              uri:
-                'https://sdl-stickershop.line.naver.jp/products/0/0/2/2407/android/stickers/79817.png;compress=true',
-            }}
-          />
-        </Card>
+        <Image
+          source={{
+            uri:
+              'https://sdl-stickershop.line.naver.jp/products/0/0/2/2407/android/stickers/79817.png;compress=true',
+          }}
+          style={styles.completedImg}
+        />
       </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  completedImg: {
+    height: 100,
+    resizeMode: 'center',
+  },
+});
 
 export default Completed;
